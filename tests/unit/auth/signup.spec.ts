@@ -3,7 +3,7 @@ import db from '@adonisjs/lucid/services/db'
 
 import AuthService from '#services/auth_service'
 import User from '#models/user'
-import { UserRole } from '../../app/enums/user_role.ts'
+import { UserRole } from '../../../app/enums/user_role.ts'
 
 test.group('AuthService | signup', (group) => {
   group.each.setup(async () => {
