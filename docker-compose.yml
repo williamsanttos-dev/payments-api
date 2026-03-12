@@ -6,14 +6,3 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
-
-  gateways:
-    image: matheusprotzen/gateways-mock
-    ports:
-      - "3001:3001"
-      - "3002:3002"
-
-  app:
-    build: .
-    ports:
-      - "3333:3333"
