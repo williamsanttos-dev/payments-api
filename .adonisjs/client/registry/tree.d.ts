@@ -5,6 +5,7 @@ export interface ApiDefinition {
   auth: {
     auth: {
       signup: typeof routes['auth.auth.signup']
+      login: typeof routes['auth.auth.login']
     }
   }
 }

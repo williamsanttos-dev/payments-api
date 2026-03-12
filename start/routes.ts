@@ -19,7 +19,7 @@ router
     router
       .group(() => {
         router.post('signup', '#controllers/auth_controller.signup')
-        // router.post('login', [controllers.AccessToken, 'store'])
+        router.post('login', '#controllers/auth_controller.login')
         // router.post('logout', [controllers.AccessToken, 'destroy']).use(middleware.auth())
       })
       .prefix('auth')

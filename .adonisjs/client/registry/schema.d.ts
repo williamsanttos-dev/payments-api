@@ -19,4 +19,16 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'auth.auth.login': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/login'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
 }
