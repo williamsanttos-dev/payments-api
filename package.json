@@ -13,6 +13,8 @@
     "build": "node ace build",
     "dev": "node ace serve --hmr",
     "test": "node ace test",
+    "test:unit": "node ace test unit",
+    "test:functional": "node ace test functional",
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit"
@@ -46,6 +48,7 @@
     "@japa/plugin-adonisjs": "^5.1.0",
     "@japa/runner": "^5.3.0",
     "@poppinss/ts-exec": "^1.4.4",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/luxon": "^3.7.1",
     "@types/node": "~24.11.0",
     "eslint": "^10.0.2",
@@ -66,6 +69,7 @@
     "@tuyau/core": "^1.0.0",
     "@vinejs/vine": "^4.3.0",
     "better-sqlite3": "^12.6.2",
+    "jsonwebtoken": "^9.0.3",
     "luxon": "^3.7.2",
     "mysql2": "^3.19.1",
     "reflect-metadata": "^0.2.2"

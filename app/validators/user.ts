@@ -1,32 +1,21 @@
 import vine from '@vinejs/vine'
+import type { Infer } from '@vinejs/vine/types'
 
-/**
- * Shared rules for email and password.
- */
+import { UserRole } from '../enums/user_role.ts'
+
 const email = () => vine.string().email().maxLength(254)
 const password = () => vine.string().minLength(8).maxLength(32)
 
-enum Role {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-}
-
-/**
- * Validator to use when performing self-signup
- */
 export const signupValidator = vine.create({
-  fullName: vine.string().nullable(),
-  email: email().unique({ table: 'users', column: 'email' }),
+  fullName: vine.string().trim().minLength(3).maxLength(100),
+  email: email().toLowerCase().unique({ table: 'users', column: 'email' }),
   password: password(),
-  passwordConfirmation: password().sameAs('password'),
-  role: vine.enum(Object.values(Role)),
+  role: vine.enum(Object.values(UserRole)),
 })
+export type SignupData = Infer<typeof signupValidator>
 
-/**
- * Validator to use before validating user credentials
- * during login
- */
 export const loginValidator = vine.create({
   email: email(),
   password: vine.string(),
 })
+export type LoginData = Infer<typeof loginValidator>

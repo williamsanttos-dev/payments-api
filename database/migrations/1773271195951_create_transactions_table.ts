@@ -19,8 +19,7 @@ export default class extends BaseSchema {
 
       table.string('card_last_numbers')
 
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamps(true)
     })
   }
 
