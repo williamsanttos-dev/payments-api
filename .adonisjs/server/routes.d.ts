@@ -11,6 +11,7 @@ export type ScannedRoutes = {
     'products.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'products.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'purchases': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'products.index': { paramsTuple?: []; params?: {} }
@@ -24,6 +25,7 @@ export type ScannedRoutes = {
     'auth.signup': { paramsTuple?: []; params?: {} }
     'auth.login': { paramsTuple?: []; params?: {} }
     'products.store': { paramsTuple?: []; params?: {} }
+    'purchases': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'products.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

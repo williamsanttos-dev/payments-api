@@ -33,5 +33,9 @@ router
       })
       .prefix('products')
       .middleware(middleware.auth(['ADMIN']))
+
+    router.group(() => {
+      router.post('purchases', '#controllers/purchases_controller.handle')
+    })
   })
   .prefix('/api/v1')

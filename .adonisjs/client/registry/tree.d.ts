@@ -13,4 +13,5 @@ export interface ApiDefinition {
     update: typeof routes['products.update']
     destroy: typeof routes['products.destroy']
   }
+  purchases: typeof routes['purchases']
 }

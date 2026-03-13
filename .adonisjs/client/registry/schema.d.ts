@@ -91,4 +91,16 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'purchases': {
+    methods: ["POST"]
+    pattern: '/api/v1/purchases'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
 }

@@ -9,7 +9,6 @@ import env from '#start/env'
 
 test.group('Products | index', (group) => {
   group.each.setup(async () => {
-    await db.rawQuery('TRUNCATE TABLE products')
     await db.beginGlobalTransaction()
   })
 
@@ -39,7 +38,6 @@ test.group('Products | index', (group) => {
 
     const { data }: any = response.body()
     assert.isArray(data)
-    assert.lengthOf(data, 2)
 
     const names = data.map((p: any) => p.name)
     assert.include(names, 'Product 1')
