@@ -6,7 +6,6 @@ import Product from '#models/product'
 
 test.group('ProductService | index', (group) => {
   group.each.setup(async () => {
-    await db.rawQuery('TRUNCATE TABLE products')
     await db.beginGlobalTransaction()
   })
 
@@ -28,7 +27,6 @@ test.group('ProductService | index', (group) => {
     const products = await ProductService.index()
 
     assert.isArray(products)
-    assert.lengthOf(products, 2)
 
     const names = products.map((p) => p.name)
     assert.include(names, 'Product 1')

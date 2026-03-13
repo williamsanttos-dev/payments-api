@@ -7,6 +7,24 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
+      table
+        .integer('transaction_id')
+        .unsigned()
+        .references('id')
+        .inTable('transactions')
+        .onDelete('CASCADE')
+        .notNullable()
+
+      table
+        .integer('product_id')
+        .unsigned()
+        .references('id')
+        .inTable('products')
+        .onDelete('CASCADE')
+        .notNullable()
+
+      table.integer('quantity').notNullable()
+
       table.timestamps(true)
     })
   }
@@ -15,3 +33,7 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
+
+// transaction_id
+// product_id
+// quantity
