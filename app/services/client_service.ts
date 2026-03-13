@@ -8,7 +8,7 @@ export class ClientService {
   static async show(id: string) {
     const client = await Client.find(id)
     if (!client)
-      throw new Exception('Client', {
+      throw new Exception('Client not found', {
         status: 404,
       })
     return client

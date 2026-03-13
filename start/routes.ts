@@ -45,5 +45,13 @@ router
       })
       .prefix('clients')
       .middleware(middleware.auth(['ADMIN']))
+
+    router
+      .group(() => {
+        ;(router.get('', '#controllers/transactions_controller.index'),
+          router.get(':id', '#controllers/transactions_controller.show'))
+      })
+      .prefix('transactions')
+      .middleware(middleware.auth(['ADMIN']))
   })
   .prefix('/api/v1')
