@@ -37,5 +37,13 @@ router
     router.group(() => {
       router.post('purchases', '#controllers/purchases_controller.handle')
     })
+
+    router
+      .group(() => {
+        ;(router.get('', '#controllers/clients_controller.index'),
+          router.get(':id', '#controllers/clients_controller.show'))
+      })
+      .prefix('clients')
+      .middleware(middleware.auth(['ADMIN']))
   })
   .prefix('/api/v1')
