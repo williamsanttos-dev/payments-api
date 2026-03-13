@@ -7,17 +7,23 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.integer('client_id').unsigned().references('id').inTable('clients').onDelete('CASCADE')
+      table
+        .integer('client_id')
+        .unsigned()
+        .references('id')
+        .inTable('clients')
+        .onDelete('CASCADE')
+        .notNullable()
 
-      table.integer('gateway_id').unsigned().references('id').inTable('gateways')
+      table.integer('gateway_id').notNullable()
 
-      table.string('external_id')
+      table.string('external_id').notNullable()
 
-      table.string('status').notNullable()
+      table.enum('status', ['PENDING', 'APPROVED', 'DECLINED', 'FAILED']).notNullable()
 
-      table.decimal('amount', 10, 2).notNullable()
+      table.integer('amount').notNullable()
 
-      table.string('card_last_numbers')
+      table.string('card_last_numbers').notNullable()
 
       table.timestamps(true)
     })
