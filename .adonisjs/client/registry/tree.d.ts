@@ -18,4 +18,8 @@ export interface ApiDefinition {
     index: typeof routes['clients.index']
     show: typeof routes['clients.show']
   }
+  transactions: {
+    index: typeof routes['transactions.index']
+    show: typeof routes['transactions.show']
+  }
 }

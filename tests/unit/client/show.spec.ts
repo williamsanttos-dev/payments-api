@@ -28,6 +28,6 @@ test.group('ClientService | show', (group) => {
   })
 
   test('should throw error if client does not exist', async ({ assert }) => {
-    await assert.rejects(() => ClientService.show('99999'), 'Client')
+    await assert.rejects(() => ClientService.show('99999'), 'Client not found')
   })
 })

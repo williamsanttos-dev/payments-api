@@ -14,18 +14,24 @@ export type ScannedRoutes = {
     'purchases': { paramsTuple?: []; params?: {} }
     'clients.index': { paramsTuple?: []; params?: {} }
     'clients.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.index': { paramsTuple?: []; params?: {} }
+    'transactions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'products.index': { paramsTuple?: []; params?: {} }
     'products.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'clients.index': { paramsTuple?: []; params?: {} }
     'clients.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.index': { paramsTuple?: []; params?: {} }
+    'transactions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'products.index': { paramsTuple?: []; params?: {} }
     'products.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'clients.index': { paramsTuple?: []; params?: {} }
     'clients.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.index': { paramsTuple?: []; params?: {} }
+    'transactions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.signup': { paramsTuple?: []; params?: {} }
