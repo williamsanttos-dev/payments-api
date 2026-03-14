@@ -9,6 +9,12 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  gateways-mock:
+    image: matheusprotzen/gateways-mock
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+
 volumes:
   db_data:
     driver: local
