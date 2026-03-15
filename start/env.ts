@@ -27,4 +27,7 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   // JWT
   JWT_SECRET: Env.schema.string(),
+
+  // URL_GATEWAY
+  URL_GATEWAY: Env.schema.string(),
 })

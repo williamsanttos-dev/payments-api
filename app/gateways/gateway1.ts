@@ -1,9 +1,11 @@
+import env from '#start/env'
+
 import type { PaymentGateway, TransactionData } from './payment_gateway_interface.ts'
 
 export class Gateway1 implements PaymentGateway {
   async createTransaction(data: TransactionData): Promise<any> {
     try {
-      const response = await fetch('http://localhost:3001/transactions', {
+      const response = await fetch(`${env.get('URL_GATEWAY')}:3001/transactions`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${await this.getToken()}`,
@@ -31,7 +33,7 @@ export class Gateway1 implements PaymentGateway {
   }
 
   private async getToken(): Promise<string> {
-    const response = await fetch('http://localhost:3001/login', {
+    const response = await fetch(`${env.get('URL_GATEWAY')}:3001/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
