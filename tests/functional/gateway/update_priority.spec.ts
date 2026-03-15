@@ -2,15 +2,12 @@ import { test } from '@japa/runner'
 import db from '@adonisjs/lucid/services/db'
 import jwt from 'jsonwebtoken'
 
-import Transaction from '#models/transaction'
+import Gateway from '#models/gateway'
 import User from '#models/user'
 import env from '#start/env'
 import { UserRole } from '../../../app/enums/user_role.ts'
-import { TransactionStatus } from '../../../app/enums/transaction_status.ts'
-import Client from '#models/client'
-import Gateway from '#models/gateway'
 
-test.group('Transactions | show', (group) => {
+test.group('Gateways | updatePriority', (group) => {
   group.each.setup(async () => {
     await db.beginGlobalTransaction()
   })
@@ -23,7 +20,7 @@ test.group('Transactions | show', (group) => {
     return jwt.sign({ userId, role }, env.get('JWT_SECRET'))
   }
 
-  test('should return transaction when ADMIN requests', async ({ client, assert }) => {
+  test('should update gateway priority for ADMIN', async ({ client, assert }) => {
     const admin = await User.create({
       fullName: 'Admin',
       email: 'admin@email.com',
@@ -33,36 +30,53 @@ test.group('Transactions | show', (group) => {
 
     const token = generateToken(admin.id, UserRole.ADMIN)
 
-    const clientId = await Client.create({
-      name: 'johnDoe',
-      email: 'johnDoe567@gmail.com',
-    })
-    const gatewayId = await Gateway.create({
-      name: 'gateway-test-001',
+    const gateway = await Gateway.create({
+      name: 'Gateway A',
+      isActive: true,
       priority: 1,
     })
 
-    const transaction = await Transaction.create({
-      clientId: clientId.id,
-      gatewayId: gatewayId.id,
-      amount: 5000,
-      externalId: 'ext_1',
-      status: TransactionStatus.APPROVED,
-      cardLastNumbers: '1234',
-    })
-
     const response = await client
-      .get(`/api/v1/transactions/${transaction.id}`)
+      .patch(`/api/v1/gateways/${gateway.id}/priority`)
+      .json({ priority: 10 })
       .header('authorization', `Bearer ${token}`)
 
     response.assertStatus(200)
 
     const { data } = response.body()
 
-    assert.equal(data.id, transaction.id)
+    assert.equal(data.id, gateway.id)
+    assert.equal(data.priority, 10)
   })
 
-  test('should return 404 if transaction does not exist', async ({ client }) => {
+  test('should return 400 when priority is not integer', async ({ client }) => {
+    const admin = await User.create({
+      fullName: 'Admin',
+      email: 'admin@email.com',
+      password: '12345678',
+      role: UserRole.ADMIN,
+    })
+
+    const token = generateToken(admin.id, UserRole.ADMIN)
+
+    const gateway = await Gateway.create({
+      name: 'Gateway A',
+      isActive: true,
+      priority: 1,
+    })
+
+    const response = await client
+      .patch(`/api/v1/gateways/${gateway.id}/priority`)
+      .json({ priority: 'abc' })
+      .header('authorization', `Bearer ${token}`)
+
+    response.assertStatus(400)
+    response.assertBodyContains({
+      message: 'Priority must be an integer',
+    })
+  })
+
+  test('should return 404 when gateway does not exist', async ({ client }) => {
     const admin = await User.create({
       fullName: 'Admin',
       email: 'admin@email.com',
@@ -73,19 +87,17 @@ test.group('Transactions | show', (group) => {
     const token = generateToken(admin.id, UserRole.ADMIN)
 
     const response = await client
-      .get('/api/v1/transactions/999999')
+      .patch('/api/v1/gateways/999999/priority')
+      .json({ priority: 2 })
       .header('authorization', `Bearer ${token}`)
 
     response.assertStatus(404)
   })
 
   test('should return 401 when token is missing', async ({ client }) => {
-    const response = await client.get('/api/v1/transactions/1')
+    const response = await client.patch('/api/v1/gateways/1/priority').json({ priority: 2 })
 
     response.assertStatus(401)
-    response.assertBodyContains({
-      error: 'Token missing',
-    })
   })
 
   test('should return 403 when role is not ADMIN', async ({ client }) => {
@@ -99,12 +111,10 @@ test.group('Transactions | show', (group) => {
     const token = generateToken(user.id, UserRole.USER)
 
     const response = await client
-      .get('/api/v1/transactions/1')
+      .patch('/api/v1/gateways/1/priority')
+      .json({ priority: 2 })
       .header('authorization', `Bearer ${token}`)
 
     response.assertStatus(403)
-    response.assertBodyContains({
-      error: 'Insufficient permissions',
-    })
   })
 })

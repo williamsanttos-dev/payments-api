@@ -1,8 +1,7 @@
-import { TransactionProductSchema } from '#database/schema'
-import { column } from '@adonisjs/lucid/orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
-export default class TransactionProduct extends TransactionProductSchema {
+export default class TransactionProduct extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 

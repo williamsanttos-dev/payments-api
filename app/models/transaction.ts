@@ -1,10 +1,11 @@
-import { TransactionSchema } from '#database/schema'
-import { column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 import { TransactionStatus } from '../enums/transaction_status.ts'
+import Product from './product.ts'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 
-export default class Transaction extends TransactionSchema {
+export default class Transaction extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -12,10 +13,10 @@ export default class Transaction extends TransactionSchema {
   declare clientId: number
 
   @column()
-  declare gatewayId: number
+  declare gatewayId: number | null
 
   @column()
-  declare externalId: string
+  declare externalId: string | null
 
   @column()
   declare status: TransactionStatus
@@ -31,4 +32,10 @@ export default class Transaction extends TransactionSchema {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @manyToMany(() => Product, {
+    pivotTable: 'transaction_products',
+    pivotColumns: ['quantity'],
+  })
+  declare products: ManyToMany<typeof Product>
 }

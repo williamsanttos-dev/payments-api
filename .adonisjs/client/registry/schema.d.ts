@@ -151,4 +151,28 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'gateways.update_active': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/gateways/:id/activate'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'gateways.update_priority': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/gateways/:id/priority'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
 }

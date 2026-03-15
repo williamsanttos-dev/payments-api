@@ -40,18 +40,26 @@ router
 
     router
       .group(() => {
-        ;(router.get('', '#controllers/clients_controller.index'),
-          router.get(':id', '#controllers/clients_controller.show'))
+        router.get('', '#controllers/clients_controller.index')
+        router.get(':id', '#controllers/clients_controller.show')
       })
       .prefix('clients')
       .middleware(middleware.auth(['ADMIN']))
 
     router
       .group(() => {
-        ;(router.get('', '#controllers/transactions_controller.index'),
-          router.get(':id', '#controllers/transactions_controller.show'))
+        router.get('', '#controllers/transactions_controller.index')
+        router.get(':id', '#controllers/transactions_controller.show')
       })
       .prefix('transactions')
+      .middleware(middleware.auth(['ADMIN']))
+
+    router
+      .group(() => {
+        router.patch(':id/activate', '#controllers/gateways_controller.updateActive')
+        router.patch(':id/priority', '#controllers/gateways_controller.updatePriority')
+      })
+      .prefix('gateways')
       .middleware(middleware.auth(['ADMIN']))
   })
   .prefix('/api/v1')

@@ -4,6 +4,8 @@ import db from '@adonisjs/lucid/services/db'
 import Transaction from '#models/transaction'
 import { TransactionService } from '#services/transaction_service'
 import { TransactionStatus } from '../../../app/enums/transaction_status.ts'
+import Client from '#models/client'
+import Gateway from '#models/gateway'
 
 test.group('TransactionService | show', (group) => {
   group.each.setup(async () => {
@@ -15,12 +17,21 @@ test.group('TransactionService | show', (group) => {
   })
 
   test('should return transaction when it exists', async ({ assert }) => {
+    const clientId = await Client.create({
+      name: 'johnDoe',
+      email: 'johnDoe567@gmail.com',
+    })
+    const gatewayId = await Gateway.create({
+      name: 'gateway-test-001',
+      priority: 1,
+    })
+
     const transaction = await Transaction.create({
-      clientId: 1,
-      gatewayId: 100,
+      clientId: clientId.id,
+      gatewayId: gatewayId.id,
       amount: 5000,
       externalId: 'ext_1',
-      status: TransactionStatus.PENDING,
+      status: TransactionStatus.APPROVED,
       cardLastNumbers: '1234',
     })
 

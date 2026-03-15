@@ -22,4 +22,8 @@ export interface ApiDefinition {
     index: typeof routes['transactions.index']
     show: typeof routes['transactions.show']
   }
+  gateways: {
+    updateActive: typeof routes['gateways.update_active']
+    updatePriority: typeof routes['gateways.update_priority']
+  }
 }

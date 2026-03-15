@@ -78,6 +78,18 @@ const routes = {
     tokens: [{"old":"/api/v1/transactions/:id","type":0,"val":"api","end":""},{"old":"/api/v1/transactions/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/transactions/:id","type":0,"val":"transactions","end":""},{"old":"/api/v1/transactions/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['transactions.show']['types'],
   },
+  'gateways.update_active': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/gateways/:id/activate',
+    tokens: [{"old":"/api/v1/gateways/:id/activate","type":0,"val":"api","end":""},{"old":"/api/v1/gateways/:id/activate","type":0,"val":"v1","end":""},{"old":"/api/v1/gateways/:id/activate","type":0,"val":"gateways","end":""},{"old":"/api/v1/gateways/:id/activate","type":1,"val":"id","end":""},{"old":"/api/v1/gateways/:id/activate","type":0,"val":"activate","end":""}],
+    types: placeholder as Registry['gateways.update_active']['types'],
+  },
+  'gateways.update_priority': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/gateways/:id/priority',
+    tokens: [{"old":"/api/v1/gateways/:id/priority","type":0,"val":"api","end":""},{"old":"/api/v1/gateways/:id/priority","type":0,"val":"v1","end":""},{"old":"/api/v1/gateways/:id/priority","type":0,"val":"gateways","end":""},{"old":"/api/v1/gateways/:id/priority","type":1,"val":"id","end":""},{"old":"/api/v1/gateways/:id/priority","type":0,"val":"priority","end":""}],
+    types: placeholder as Registry['gateways.update_priority']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

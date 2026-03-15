@@ -83,9 +83,9 @@ export class TransactionSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
-  declare externalId: string
+  declare externalId: string | null
   @column()
-  declare gatewayId: number
+  declare gatewayId: number | null
   @column({ isPrimary: true })
   declare id: number
   @column()

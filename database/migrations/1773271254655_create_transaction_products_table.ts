@@ -33,7 +33,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-
-// transaction_id
-// product_id
-// quantity

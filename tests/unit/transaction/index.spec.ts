@@ -4,6 +4,8 @@ import db from '@adonisjs/lucid/services/db'
 import Transaction from '#models/transaction'
 import { TransactionService } from '#services/transaction_service'
 import { TransactionStatus } from '../../../app/enums/transaction_status.ts'
+import Client from '#models/client'
+import Gateway from '#models/gateway'
 
 test.group('TransactionService | index', (group) => {
   group.each.setup(async () => {
@@ -15,21 +17,30 @@ test.group('TransactionService | index', (group) => {
   })
 
   test('should return all transactions', async ({ assert }) => {
+    const clientId = await Client.create({
+      name: 'johnDoe',
+      email: 'johnDoe567@gmail.com',
+    })
+    const gatewayId = await Gateway.create({
+      name: 'gateway-test-001',
+      priority: 1,
+    })
+
     await Transaction.create({
-      clientId: 1,
-      gatewayId: 100,
+      clientId: clientId.id,
+      gatewayId: gatewayId.id,
       amount: 5000,
       externalId: 'ext_1',
-      status: TransactionStatus.PENDING,
+      status: TransactionStatus.APPROVED,
       cardLastNumbers: '1234',
     })
 
     await Transaction.create({
-      clientId: 1,
-      gatewayId: 200,
+      clientId: clientId.id,
+      gatewayId: gatewayId.id,
       amount: 8000,
       externalId: 'ext_2',
-      status: TransactionStatus.PENDING,
+      status: TransactionStatus.REFUNDED,
       cardLastNumbers: '4321',
     })
 

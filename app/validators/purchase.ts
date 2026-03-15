@@ -17,7 +17,7 @@ export const purchaseValidator = vine.create({
     .minLength(1),
 
   cardNumber: vine.string().regex(/^\d{16}$/),
-  // cvv: vine.string().regex(/^\d{3,4}$/),
+  cvv: vine.string().regex(/^\d{3,4}$/),
 })
 
 export type PurchaseData = Infer<typeof purchaseValidator>

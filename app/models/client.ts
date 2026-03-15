@@ -1,8 +1,7 @@
-import { ClientSchema } from '#database/schema'
-import { column } from '@adonisjs/lucid/orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
-export default class Client extends ClientSchema {
+export default class Client extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 

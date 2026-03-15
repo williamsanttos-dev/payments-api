@@ -1,5 +1,8 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, manyToMany, computed } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+
+import Transaction from './transaction.ts'
 
 export default class Product extends BaseModel {
   @column({ isPrimary: true })
@@ -16,4 +19,15 @@ export default class Product extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @manyToMany(() => Transaction, {
+    pivotTable: 'transaction_products',
+    pivotColumns: ['quantity'],
+  })
+  declare transactions: ManyToMany<typeof Transaction>
+
+  @computed()
+  get quantity() {
+    return this.$extras.pivot_quantity
+  }
 }

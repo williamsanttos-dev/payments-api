@@ -16,6 +16,8 @@ export type ScannedRoutes = {
     'clients.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'transactions.index': { paramsTuple?: []; params?: {} }
     'transactions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'gateways.update_active': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'gateways.update_priority': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'products.index': { paramsTuple?: []; params?: {} }
@@ -41,6 +43,8 @@ export type ScannedRoutes = {
   }
   PATCH: {
     'products.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'gateways.update_active': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'gateways.update_priority': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'products.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

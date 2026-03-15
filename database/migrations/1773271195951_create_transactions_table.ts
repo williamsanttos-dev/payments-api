@@ -15,11 +15,16 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
         .notNullable()
 
-      table.integer('gateway_id').notNullable()
+      table
+        .integer('gateway_id')
+        .unsigned()
+        .references('id')
+        .inTable('gateways')
+        .onDelete('CASCADE')
 
-      table.string('external_id').notNullable()
+      table.string('external_id')
 
-      table.enum('status', ['PENDING', 'APPROVED', 'DECLINED', 'FAILED']).notNullable()
+      table.enum('status', ['APPROVED', 'FAILED', 'REFUNDED']).notNullable()
 
       table.integer('amount').notNullable()
 
