@@ -50,6 +50,7 @@ router
       .group(() => {
         router.get('', '#controllers/transactions_controller.index')
         router.get(':id', '#controllers/transactions_controller.show')
+        router.post(':id/refund', '#controllers/transactions_controller.refund')
       })
       .prefix('transactions')
       .middleware(middleware.auth(['ADMIN']))
