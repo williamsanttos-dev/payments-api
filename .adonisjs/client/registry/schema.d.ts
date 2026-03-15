@@ -151,6 +151,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'transactions.refund': {
+    methods: ["POST"]
+    pattern: '/api/v1/transactions/:id/refund'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'gateways.update_active': {
     methods: ["PATCH"]
     pattern: '/api/v1/gateways/:id/activate'

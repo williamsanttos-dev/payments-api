@@ -22,6 +22,7 @@ class FakeGatewayManager {
       transaction: { id: 'fake_tx' },
     }
   }
+  async refund(): Promise<void> {}
 }
 
 test.group('Purchases | handle', (group) => {

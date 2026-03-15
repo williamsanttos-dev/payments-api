@@ -21,6 +21,7 @@ export interface ApiDefinition {
   transactions: {
     index: typeof routes['transactions.index']
     show: typeof routes['transactions.show']
+    refund: typeof routes['transactions.refund']
   }
   gateways: {
     updateActive: typeof routes['gateways.update_active']
