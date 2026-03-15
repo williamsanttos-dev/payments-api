@@ -14,6 +14,11 @@ export type GatewayProcessResult =
       transaction: { id: null }
     }
 
+export type RefundData = {
+  externalTransactionId: string
+  gatewayName: string
+}
+
 export class GatewayManager {
   async createTransaction(data: TransactionData): Promise<GatewayProcessResult> {
     const gateways = await Gateway.query().where('is_active', true).orderBy('priority', 'asc')
@@ -44,5 +49,11 @@ export class GatewayManager {
         id: null,
       },
     }
+  }
+  async refund(data: RefundData) {
+    const gateway = GatewayFactory.make(data.gatewayName)
+
+    await gateway.refund(data.externalTransactionId)
+    return
   }
 }

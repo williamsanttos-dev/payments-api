@@ -31,8 +31,42 @@ export class Gateway2 implements PaymentGateway {
 
         throw new Error('Gateway transaction failed')
       }
-      // melhorar handle de erro
       return await response.json()
+    } catch (err) {
+      console.error('Gateway request failed', err)
+
+      throw err
+    }
+  }
+  async refund(externalTransactionId: string): Promise<any> {
+    try {
+      const response = await fetch(`${env.get('URL_GATEWAY')}:3002/transacoes/reembolso`, {
+        method: 'POST',
+        headers: {
+          'Gateway-Auth-Token': 'tk_f2198cc671b5289fa856',
+          'Gateway-Auth-Secret': '3d15e8ed6131446ea7e3456728b1211f',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: externalTransactionId,
+        }),
+      })
+
+      if (response.status !== 201) {
+        const body = await response.text()
+
+        console.error('Gateway returned unexpected status', {
+          status: response.status,
+          body,
+        })
+
+        throw new Error('Gateway transaction refund failed')
+      }
+
+      return {
+        gateway: 'gateway-2',
+        refundedAt: new Date(),
+      }
     } catch (err) {
       console.error('Gateway request failed', err)
 

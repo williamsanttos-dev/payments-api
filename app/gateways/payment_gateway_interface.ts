@@ -8,5 +8,5 @@ export type TransactionData = {
 
 export interface PaymentGateway {
   createTransaction(data: TransactionData): Promise<any>
-  //   chargeBack(): Promise<void>
+  refund(ExternalTransactionId: string): Promise<any>
 }
