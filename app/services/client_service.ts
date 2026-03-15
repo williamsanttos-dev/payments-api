@@ -1,4 +1,5 @@
 import Client from '#models/client'
+import Transaction from '#models/transaction'
 import { Exception } from '@adonisjs/core/exceptions'
 
 export class ClientService {
@@ -11,6 +12,9 @@ export class ClientService {
       throw new Exception('Client not found', {
         status: 404,
       })
-    return client
+
+    const transactions = await Transaction.query().where('clientId', id)
+
+    return { client, transactions }
   }
 }

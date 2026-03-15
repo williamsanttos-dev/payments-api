@@ -10,7 +10,7 @@ export default class ClientsController {
     })
   }
   async show({ params, response }: HttpContext) {
-    const client = await ClientService.show(params.id)
-    return response.ok({ data: client })
+    const result = await ClientService.show(params.id)
+    return response.ok({ data: result })
   }
 }
