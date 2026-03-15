@@ -26,4 +26,10 @@ export interface ApiDefinition {
     updateActive: typeof routes['gateways.update_active']
     updatePriority: typeof routes['gateways.update_priority']
   }
+  users: {
+    index: typeof routes['users.index']
+    show: typeof routes['users.show']
+    update: typeof routes['users.update']
+    destroy: typeof routes['users.destroy']
+  }
 }
