@@ -95,7 +95,7 @@ export class TransactionSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'role', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'fullName', 'id', 'isActive', 'password', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -105,6 +105,8 @@ export class UserSchema extends BaseModel {
   declare fullName: string
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare isActive: boolean | null
   @column({ serializeAs: null })
   declare password: string
   @column()

@@ -20,6 +20,9 @@ export default class User extends BaseModel {
   @column()
   declare role: UserRole
 
+  @column()
+  declare isActive: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

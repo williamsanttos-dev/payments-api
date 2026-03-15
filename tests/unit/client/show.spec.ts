@@ -22,9 +22,9 @@ test.group('ClientService | show', (group) => {
     const result = await ClientService.show(client.id.toString())
 
     assert.exists(result)
-    assert.equal(result.id, client.id)
-    assert.equal(result.name, client.name)
-    assert.equal(result.email, client.email)
+    assert.equal(result.client.id, client.id)
+    assert.equal(result.client.name, client.name)
+    assert.equal(result.client.email, client.email)
   })
 
   test('should throw error if client does not exist', async ({ assert }) => {

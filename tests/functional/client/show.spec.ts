@@ -43,9 +43,9 @@ test.group('Clients | show', (group) => {
 
     const { data } = response.body()
 
-    assert.equal(data.id, createdClient.id)
-    assert.equal(data.name, createdClient.name)
-    assert.equal(data.email, createdClient.email)
+    assert.equal(data.client.id, createdClient.id)
+    assert.equal(data.client.name, createdClient.name)
+    assert.equal(data.client.email, createdClient.email)
   })
 
   test('should return 404 if client does not exist', async ({ client }) => {
