@@ -6,7 +6,12 @@ export default class AuthController {
   async signup({ request, response }: HttpContext) {
     const payload = await request.validateUsing(signupValidator)
 
-    await AuthService.signup(payload)
+    const user = {
+      ...payload,
+      role: 'USER',
+    }
+
+    await AuthService.signup(user)
 
     return response.ok({
       message: 'User created successfully',

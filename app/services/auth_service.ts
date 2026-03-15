@@ -11,7 +11,7 @@ export default class AuthService {
     return await User.create(data)
   }
   static async login(data: LoginData) {
-    const user = await User.findBy('email', data.email)
+    const user = await User.query().where({ email: data.email, is_active: true }).first()
 
     if (!user || !(await hash.verify(user?.password, data.password)))
       throw new Exception('Invalid credentials', { status: 401 })

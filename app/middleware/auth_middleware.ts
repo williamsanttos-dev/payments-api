@@ -4,12 +4,7 @@ import type { NextFn } from '@adonisjs/core/types/http'
 import jwt from 'jsonwebtoken'
 import env from '#start/env'
 
-import type { UserRole } from '../enums/user_role.ts'
-
-type PayloadJwt = {
-  userId: string
-  role: UserRole
-}
+import type { AuthUser } from '../types/auth_user.ts'
 
 export default class Auth {
   async handle(ctx: HttpContext, next: NextFn, args: string[]) {
@@ -19,7 +14,7 @@ export default class Auth {
     const token = authHeader.split(' ')[1]
 
     try {
-      const payload = jwt.verify(token, env.get('JWT_SECRET')) as PayloadJwt
+      const payload = jwt.verify(token, env.get('JWT_SECRET')) as AuthUser
 
       ctx.request['user'] = payload
 
