@@ -154,14 +154,9 @@ export class TransactionService {
         gatewayName: gateway.name,
       })
 
-      await Transaction.query({ client: tx })
-        .where({
-          id: transaction.id,
-          status: TransactionStatus.APPROVED,
-        })
-        .update({
-          status: TransactionStatus.REFUNDED,
-        })
+      transaction.useTransaction(tx)
+      transaction.status = TransactionStatus.REFUNDED
+      await transaction.save()
 
       return transaction
     })
