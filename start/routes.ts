@@ -34,10 +34,6 @@ router
       .prefix('products')
       .middleware(middleware.auth(['ADMIN']))
 
-    router.group(() => {
-      router.post('purchases', '#controllers/purchases_controller.handle')
-    })
-
     router
       .group(() => {
         router.get('', '#controllers/clients_controller.index')
@@ -48,12 +44,18 @@ router
 
     router
       .group(() => {
-        router.get('', '#controllers/transactions_controller.index')
-        router.get(':id', '#controllers/transactions_controller.show')
-        router.post(':id/refund', '#controllers/transactions_controller.refund')
+        router.post('', '#controllers/transactions_controller.create')
+        router
+          .get('', '#controllers/transactions_controller.index')
+          .middleware(middleware.auth(['ADMIN']))
+        router
+          .get(':id', '#controllers/transactions_controller.show')
+          .middleware(middleware.auth(['ADMIN']))
+        router
+          .post(':id/refund', '#controllers/transactions_controller.refund')
+          .middleware(middleware.auth(['ADMIN']))
       })
       .prefix('transactions')
-      .middleware(middleware.auth(['ADMIN']))
 
     router
       .group(() => {

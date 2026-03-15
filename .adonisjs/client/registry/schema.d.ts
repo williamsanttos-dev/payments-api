@@ -91,18 +91,6 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'purchases': {
-    methods: ["POST"]
-    pattern: '/api/v1/purchases'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
-    }
-  }
   'clients.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/clients'
@@ -122,6 +110,18 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'transactions.create': {
+    methods: ["POST"]
+    pattern: '/api/v1/transactions'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
       query: {}
       response: unknown
       errorResponse: unknown

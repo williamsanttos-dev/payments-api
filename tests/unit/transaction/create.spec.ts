@@ -3,7 +3,7 @@ import db from '@adonisjs/lucid/services/db'
 import Product from '#models/product'
 import Client from '#models/client'
 import Transaction from '#models/transaction'
-import { PurchaseService } from '#services/purchase_service'
+import { TransactionService } from '#services/transaction_service'
 import { TransactionStatus } from '../../../app/enums/transaction_status.ts'
 import type { GatewayProcessResult } from '../../../app/gateways/gateway_manager.ts'
 import Gateway from '#models/gateway'
@@ -20,7 +20,7 @@ class FakeGatewayManager {
   }
 }
 
-test.group('PurchaseService | handle', (group) => {
+test.group('TransactionService | create', (group) => {
   group.each.setup(async () => {
     await db.beginGlobalTransaction()
   })
@@ -29,7 +29,7 @@ test.group('PurchaseService | handle', (group) => {
     await db.rollbackGlobalTransaction()
   })
 
-  const purchasePayload = {
+  const transactionPayload = {
     client: {
       name: 'John Doe',
       email: 'john@email.com',
@@ -48,7 +48,9 @@ test.group('PurchaseService | handle', (group) => {
       priority: 10,
     })
 
-  test('should create purchase with APPROVED status when gateway succeeds', async ({ assert }) => {
+  test('should create transaction with APPROVED status when gateway succeeds', async ({
+    assert,
+  }) => {
     const p1 = await Product.create({ name: 'Product A', amount: 10 })
     const p2 = await Product.create({ name: 'Product B', amount: 20 })
 
@@ -59,10 +61,10 @@ test.group('PurchaseService | handle', (group) => {
       transaction: { id: 'ext_123' },
     })
 
-    const service = new PurchaseService(gateway as any)
+    const service = new TransactionService(gateway as any)
 
-    const result = await service.handle({
-      ...purchasePayload,
+    const result = await service.create({
+      ...transactionPayload,
       products: [
         { productId: p1.id, quantity: 2 },
         { productId: p2.id, quantity: 1 },
@@ -71,7 +73,7 @@ test.group('PurchaseService | handle', (group) => {
 
     assert.exists(result.transactionId)
     assert.equal(result.status, TransactionStatus.APPROVED)
-    assert.equal(result.totalPurchase, '40.00')
+    assert.equal(result.totalTransaction, '40.00')
 
     const transaction = await Transaction.find(result.transactionId)
 
@@ -80,7 +82,7 @@ test.group('PurchaseService | handle', (group) => {
     assert.equal(transaction!.cardLastNumbers, '5678')
   })
 
-  test('should create purchase with FAILED status when gateway fails', async ({ assert }) => {
+  test('should create transaction with FAILED status when gateway fails', async ({ assert }) => {
     const product = await Product.create({ name: 'Product A', amount: 15 })
 
     const gateway = new FakeGatewayManager({
@@ -89,10 +91,10 @@ test.group('PurchaseService | handle', (group) => {
       transaction: { id: null },
     })
 
-    const service = new PurchaseService(gateway as any)
+    const service = new TransactionService(gateway as any)
 
-    const result = await service.handle({
-      ...purchasePayload,
+    const result = await service.create({
+      ...transactionPayload,
       products: [{ productId: product.id, quantity: 2 }],
     })
 
@@ -112,12 +114,12 @@ test.group('PurchaseService | handle', (group) => {
       transaction: { id: 'ext_123' },
     })
 
-    const service = new PurchaseService(gateway as any)
+    const service = new TransactionService(gateway as any)
 
     await assert.rejects(
       () =>
-        service.handle({
-          ...purchasePayload,
+        service.create({
+          ...transactionPayload,
           products: [{ productId: 999, quantity: 1 }],
         }),
       'One or more products not found'
@@ -139,10 +141,10 @@ test.group('PurchaseService | handle', (group) => {
       transaction: { id: 'ext_123' },
     })
 
-    const service = new PurchaseService(gateway as any)
+    const service = new TransactionService(gateway as any)
 
-    await service.handle({
-      ...purchasePayload,
+    await service.create({
+      ...transactionPayload,
       products: [{ productId: product.id, quantity: 1 }],
     })
 
@@ -161,10 +163,10 @@ test.group('PurchaseService | handle', (group) => {
       transaction: { id: 'ext_123' },
     })
 
-    const service = new PurchaseService(gateway as any)
+    const service = new TransactionService(gateway as any)
 
-    const result = await service.handle({
-      ...purchasePayload,
+    const result = await service.create({
+      ...transactionPayload,
       products: [{ productId: product.id, quantity: 3 }],
     })
 

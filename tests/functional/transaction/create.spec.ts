@@ -25,7 +25,7 @@ class FakeGatewayManager {
   async refund(): Promise<void> {}
 }
 
-test.group('Purchases | handle', (group) => {
+test.group('Transactions | create', (group) => {
   group.setup(() => {
     app.container.swap(GatewayManager, () => new FakeGatewayManager())
   })
@@ -38,13 +38,13 @@ test.group('Purchases | handle', (group) => {
     await db.rollbackGlobalTransaction()
   })
 
-  test('should create purchase successfully', async ({ client, assert }) => {
+  test('should create transaction successfully', async ({ client, assert }) => {
     const product = await Product.create({
       name: 'Product A',
       amount: 10,
     })
 
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'John Doe',
         email: 'john@email.com',
@@ -64,7 +64,7 @@ test.group('Purchases | handle', (group) => {
     const { data }: any = response.body()
 
     assert.exists(data.transactionId)
-    assert.equal(data.totalPurchase, '20.00')
+    assert.equal(data.totalTransaction, '20.00')
 
     const transaction = await Transaction.find(data.transactionId)
 
@@ -73,7 +73,7 @@ test.group('Purchases | handle', (group) => {
   })
 
   test('should return 404 when product does not exist', async ({ client }) => {
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'John Doe',
         email: 'john@email.com',
@@ -92,7 +92,7 @@ test.group('Purchases | handle', (group) => {
   })
 
   test('should fail validation when payload is invalid', async ({ client }) => {
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'Jo',
         email: 'invalid-email',
@@ -105,7 +105,7 @@ test.group('Purchases | handle', (group) => {
     response.assertStatus(422)
   })
 
-  test('should calculate total purchase correctly', async ({ client, assert }) => {
+  test('should calculate total transaction correctly', async ({ client, assert }) => {
     const p1 = await Product.create({
       name: 'Product A',
       amount: 10,
@@ -116,7 +116,7 @@ test.group('Purchases | handle', (group) => {
       amount: 5,
     })
 
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'Jane Doe',
         email: 'jane@email.com',
@@ -133,7 +133,7 @@ test.group('Purchases | handle', (group) => {
 
     const { data }: any = response.body()
 
-    assert.equal(data.totalPurchase, '35.00')
+    assert.equal(data.totalTransaction, '35.00')
     assert.lengthOf(data.products, 2)
   })
 })
