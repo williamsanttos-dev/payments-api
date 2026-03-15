@@ -12,5 +12,12 @@ export default class extends BaseSeeder {
       isActive: true,
       role: UserRole.ADMIN,
     })
+    await User.create({
+      fullName: 'john Doe',
+      email: 'johnDoeUser@example.com',
+      password: 'JohnDoe12',
+      isActive: true,
+      role: UserRole.USER,
+    })
   }
 }
