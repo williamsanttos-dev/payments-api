@@ -48,6 +48,58 @@ test.group('TransactionService | create', (group) => {
       priority: 10,
     })
 
+  test('should mark transaction as FAILED when gateway rejects card (cvv 200)', async ({
+    assert,
+  }) => {
+    const product = await Product.create({ name: 'Product A', amount: 10 })
+
+    const gateway = new FakeGatewayManager({
+      success: false,
+      gatewayId: null,
+      transaction: { id: null },
+    })
+
+    const service = new TransactionService(gateway as any)
+
+    const result = await service.create({
+      ...transactionPayload,
+      cvv: '200',
+      products: [{ productId: product.id, quantity: 1 }],
+    })
+
+    assert.equal(result.status, TransactionStatus.FAILED)
+
+    const transaction = await Transaction.find(result.transactionId)
+
+    assert.exists(transaction)
+    assert.equal(transaction!.status, TransactionStatus.FAILED)
+  })
+  test('should mark transaction as FAILED when gateway rejects card (cvv 300)', async ({
+    assert,
+  }) => {
+    const product = await Product.create({ name: 'Product B', amount: 15 })
+
+    const gateway = new FakeGatewayManager({
+      success: false,
+      gatewayId: null,
+      transaction: { id: null },
+    })
+
+    const service = new TransactionService(gateway as any)
+
+    const result = await service.create({
+      ...transactionPayload,
+      cvv: '300',
+      products: [{ productId: product.id, quantity: 1 }],
+    })
+
+    assert.equal(result.status, TransactionStatus.FAILED)
+
+    const transaction = await Transaction.find(result.transactionId)
+
+    assert.exists(transaction)
+    assert.equal(transaction!.status, TransactionStatus.FAILED)
+  })
   test('should create transaction with APPROVED status when gateway succeeds', async ({
     assert,
   }) => {

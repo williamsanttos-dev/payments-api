@@ -15,13 +15,22 @@ const getGatewayId = async () =>
   })
 const gatewayId = await getGatewayId()
 class FakeGatewayManager {
-  async createTransaction(): Promise<GatewayProcessResult> {
+  async createTransaction(payload: any): Promise<GatewayProcessResult> {
+    if (payload.cvv === '200' || payload.cvv === '300') {
+      return {
+        success: false,
+        gatewayId: null,
+        transaction: { id: null },
+      }
+    }
+
     return {
       success: true,
       gatewayId: gatewayId.id,
       transaction: { id: 'fake_tx' },
     }
   }
+
   async refund(): Promise<void> {}
 }
 
@@ -38,6 +47,78 @@ test.group('Transactions | create', (group) => {
     await db.rollbackGlobalTransaction()
   })
 
+  test('should mark transaction as FAILED when gateway rejects card (cvv 200)', async ({
+    client,
+    assert,
+  }) => {
+    const product = await Product.create({
+      name: 'Product A',
+      amount: 10,
+    })
+
+    const response = await client.post('/api/v1/transactions').json({
+      client: {
+        name: 'John Doe',
+        email: 'john@email.com',
+      },
+      products: [
+        {
+          productId: product.id,
+          quantity: 1,
+        },
+      ],
+      cardNumber: '1234567812345678',
+      cvv: '200',
+    })
+
+    response.assertStatus(200)
+
+    const { data }: any = response.body()
+
+    assert.exists(data.transactionId)
+    assert.equal(data.status, 'FAILED')
+
+    const transaction = await Transaction.find(data.transactionId)
+
+    assert.exists(transaction)
+    assert.equal(transaction!.status, 'FAILED')
+  })
+  test('should mark transaction as FAILED when gateway rejects card (cvv 300)', async ({
+    client,
+    assert,
+  }) => {
+    const product = await Product.create({
+      name: 'Product B',
+      amount: 15,
+    })
+
+    const response = await client.post('/api/v1/transactions').json({
+      client: {
+        name: 'Jane Doe',
+        email: 'jane@email.com',
+      },
+      products: [
+        {
+          productId: product.id,
+          quantity: 1,
+        },
+      ],
+      cardNumber: '1234567812345678',
+      cvv: '300',
+    })
+
+    response.assertStatus(200)
+
+    const { data }: any = response.body()
+
+    assert.exists(data.transactionId)
+    assert.equal(data.status, 'FAILED')
+
+    const transaction = await Transaction.find(data.transactionId)
+
+    assert.exists(transaction)
+    assert.equal(transaction!.status, 'FAILED')
+  })
   test('should create transaction successfully', async ({ client, assert }) => {
     const product = await Product.create({
       name: 'Product A',
