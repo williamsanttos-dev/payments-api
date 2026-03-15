@@ -15,16 +15,26 @@ const getGatewayId = async () =>
   })
 const gatewayId = await getGatewayId()
 class FakeGatewayManager {
-  async createTransaction(): Promise<GatewayProcessResult> {
+  async createTransaction(payload: any): Promise<GatewayProcessResult> {
+    if (payload.cvv === '200' || payload.cvv === '300') {
+      return {
+        success: false,
+        gatewayId: null,
+        transaction: { id: null },
+      }
+    }
+
     return {
       success: true,
       gatewayId: gatewayId.id,
       transaction: { id: 'fake_tx' },
     }
   }
+
+  async refund(): Promise<void> {}
 }
 
-test.group('Purchases | handle', (group) => {
+test.group('Transactions | create', (group) => {
   group.setup(() => {
     app.container.swap(GatewayManager, () => new FakeGatewayManager())
   })
@@ -37,13 +47,85 @@ test.group('Purchases | handle', (group) => {
     await db.rollbackGlobalTransaction()
   })
 
-  test('should create purchase successfully', async ({ client, assert }) => {
+  test('should mark transaction as FAILED when gateway rejects card (cvv 200)', async ({
+    client,
+    assert,
+  }) => {
     const product = await Product.create({
       name: 'Product A',
       amount: 10,
     })
 
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
+      client: {
+        name: 'John Doe',
+        email: 'john@email.com',
+      },
+      products: [
+        {
+          productId: product.id,
+          quantity: 1,
+        },
+      ],
+      cardNumber: '1234567812345678',
+      cvv: '200',
+    })
+
+    response.assertStatus(200)
+
+    const { data }: any = response.body()
+
+    assert.exists(data.transactionId)
+    assert.equal(data.status, 'FAILED')
+
+    const transaction = await Transaction.find(data.transactionId)
+
+    assert.exists(transaction)
+    assert.equal(transaction!.status, 'FAILED')
+  })
+  test('should mark transaction as FAILED when gateway rejects card (cvv 300)', async ({
+    client,
+    assert,
+  }) => {
+    const product = await Product.create({
+      name: 'Product B',
+      amount: 15,
+    })
+
+    const response = await client.post('/api/v1/transactions').json({
+      client: {
+        name: 'Jane Doe',
+        email: 'jane@email.com',
+      },
+      products: [
+        {
+          productId: product.id,
+          quantity: 1,
+        },
+      ],
+      cardNumber: '1234567812345678',
+      cvv: '300',
+    })
+
+    response.assertStatus(200)
+
+    const { data }: any = response.body()
+
+    assert.exists(data.transactionId)
+    assert.equal(data.status, 'FAILED')
+
+    const transaction = await Transaction.find(data.transactionId)
+
+    assert.exists(transaction)
+    assert.equal(transaction!.status, 'FAILED')
+  })
+  test('should create transaction successfully', async ({ client, assert }) => {
+    const product = await Product.create({
+      name: 'Product A',
+      amount: 10,
+    })
+
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'John Doe',
         email: 'john@email.com',
@@ -63,7 +145,7 @@ test.group('Purchases | handle', (group) => {
     const { data }: any = response.body()
 
     assert.exists(data.transactionId)
-    assert.equal(data.totalPurchase, '20.00')
+    assert.equal(data.totalTransaction, '20.00')
 
     const transaction = await Transaction.find(data.transactionId)
 
@@ -72,7 +154,7 @@ test.group('Purchases | handle', (group) => {
   })
 
   test('should return 404 when product does not exist', async ({ client }) => {
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'John Doe',
         email: 'john@email.com',
@@ -91,7 +173,7 @@ test.group('Purchases | handle', (group) => {
   })
 
   test('should fail validation when payload is invalid', async ({ client }) => {
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'Jo',
         email: 'invalid-email',
@@ -104,7 +186,7 @@ test.group('Purchases | handle', (group) => {
     response.assertStatus(422)
   })
 
-  test('should calculate total purchase correctly', async ({ client, assert }) => {
+  test('should calculate total transaction correctly', async ({ client, assert }) => {
     const p1 = await Product.create({
       name: 'Product A',
       amount: 10,
@@ -115,7 +197,7 @@ test.group('Purchases | handle', (group) => {
       amount: 5,
     })
 
-    const response = await client.post('/api/v1/purchases').json({
+    const response = await client.post('/api/v1/transactions').json({
       client: {
         name: 'Jane Doe',
         email: 'jane@email.com',
@@ -132,7 +214,7 @@ test.group('Purchases | handle', (group) => {
 
     const { data }: any = response.body()
 
-    assert.equal(data.totalPurchase, '35.00')
+    assert.equal(data.totalTransaction, '35.00')
     assert.lengthOf(data.products, 2)
   })
 })

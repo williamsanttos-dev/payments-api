@@ -48,12 +48,6 @@ const routes = {
     tokens: [{"old":"/api/v1/products/:id","type":0,"val":"api","end":""},{"old":"/api/v1/products/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/products/:id","type":0,"val":"products","end":""},{"old":"/api/v1/products/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['products.destroy']['types'],
   },
-  'purchases': {
-    methods: ["POST"],
-    pattern: '/api/v1/purchases',
-    tokens: [{"old":"/api/v1/purchases","type":0,"val":"api","end":""},{"old":"/api/v1/purchases","type":0,"val":"v1","end":""},{"old":"/api/v1/purchases","type":0,"val":"purchases","end":""}],
-    types: placeholder as Registry['purchases']['types'],
-  },
   'clients.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/clients',
@@ -66,6 +60,12 @@ const routes = {
     tokens: [{"old":"/api/v1/clients/:id","type":0,"val":"api","end":""},{"old":"/api/v1/clients/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/clients/:id","type":0,"val":"clients","end":""},{"old":"/api/v1/clients/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['clients.show']['types'],
   },
+  'transactions.create': {
+    methods: ["POST"],
+    pattern: '/api/v1/transactions',
+    tokens: [{"old":"/api/v1/transactions","type":0,"val":"api","end":""},{"old":"/api/v1/transactions","type":0,"val":"v1","end":""},{"old":"/api/v1/transactions","type":0,"val":"transactions","end":""}],
+    types: placeholder as Registry['transactions.create']['types'],
+  },
   'transactions.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/transactions',
@@ -77,6 +77,12 @@ const routes = {
     pattern: '/api/v1/transactions/:id',
     tokens: [{"old":"/api/v1/transactions/:id","type":0,"val":"api","end":""},{"old":"/api/v1/transactions/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/transactions/:id","type":0,"val":"transactions","end":""},{"old":"/api/v1/transactions/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['transactions.show']['types'],
+  },
+  'transactions.refund': {
+    methods: ["POST"],
+    pattern: '/api/v1/transactions/:id/refund',
+    tokens: [{"old":"/api/v1/transactions/:id/refund","type":0,"val":"api","end":""},{"old":"/api/v1/transactions/:id/refund","type":0,"val":"v1","end":""},{"old":"/api/v1/transactions/:id/refund","type":0,"val":"transactions","end":""},{"old":"/api/v1/transactions/:id/refund","type":1,"val":"id","end":""},{"old":"/api/v1/transactions/:id/refund","type":0,"val":"refund","end":""}],
+    types: placeholder as Registry['transactions.refund']['types'],
   },
   'gateways.update_active': {
     methods: ["PATCH"],

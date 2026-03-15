@@ -91,18 +91,6 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'purchases': {
-    methods: ["POST"]
-    pattern: '/api/v1/purchases'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
-    }
-  }
   'clients.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/clients'
@@ -127,6 +115,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'transactions.create': {
+    methods: ["POST"]
+    pattern: '/api/v1/transactions'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'transactions.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/transactions'
@@ -142,6 +142,18 @@ export interface Registry {
   'transactions.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/transactions/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'transactions.refund': {
+    methods: ["POST"]
+    pattern: '/api/v1/transactions/:id/refund'
     types: {
       body: {}
       paramsTuple: [ParamValue]

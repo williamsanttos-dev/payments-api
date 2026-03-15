@@ -31,6 +31,39 @@ export class Gateway1 implements PaymentGateway {
       throw err
     }
   }
+  async refund(ExternalTransactionId: string): Promise<any> {
+    try {
+      const response = await fetch(
+        `${env.get('URL_GATEWAY')}:3001/transactions/${ExternalTransactionId}/charge_back`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${await this.getToken()}`,
+          },
+        }
+      )
+
+      if (response.status !== 201) {
+        const body = await response.text()
+
+        console.error('Gateway returned unexpected status', {
+          status: response.status,
+          body,
+        })
+
+        throw new Error('Gateway transaction refund failed')
+      }
+
+      return {
+        gateway: 'gateway-1',
+        refundedAt: new Date(),
+      }
+    } catch (err) {
+      console.error('Gateway request failed', err)
+
+      throw err
+    }
+  }
 
   private async getToken(): Promise<string> {
     const response = await fetch(`${env.get('URL_GATEWAY')}:3001/login`, {
@@ -47,5 +80,4 @@ export class Gateway1 implements PaymentGateway {
     const body = (await response.json()) as any
     return body.token
   }
-  //   refund(): Promise<void> {}
 }
