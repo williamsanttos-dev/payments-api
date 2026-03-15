@@ -61,5 +61,20 @@ router
       })
       .prefix('gateways')
       .middleware(middleware.auth(['ADMIN']))
+
+    router
+      .group(() => {
+        router.get('', '#controllers/users_controller.index').middleware(middleware.auth(['ADMIN']))
+        router
+          .get(':id', '#controllers/users_controller.show')
+          .middleware(middleware.auth(['ADMIN', 'USER']))
+        router
+          .patch(':id', '#controllers/users_controller.update')
+          .middleware(middleware.auth(['ADMIN', 'USER']))
+        router
+          .delete(':id', '#controllers/users_controller.destroy')
+          .middleware(middleware.auth(['ADMIN', 'USER']))
+      })
+      .prefix('users')
   })
   .prefix('/api/v1')
